@@ -1,6 +1,6 @@
 use crate::RepoType;
 
-use super::{Api, ApiError, ApiRepo, ReqwestBadResponse};
+use super::{Api, ApiError, ApiRepo, HfBadResponse};
 
 /// todo docs
 #[derive(Debug)]
@@ -40,6 +40,53 @@ impl ApiRepo {
             RepoType::Space => todo!(),
         }
     }
+
+    /// Checks if this repository exists on the Hugging Face Hub.
+    pub async fn exists(&self) -> bool {
+        match self.repo_info().await {
+            Ok(_) => true,
+            // no access, but it exists
+            Err(ApiError::GatedRepoError(_)) => true,
+            Err(ApiError::RepositoryNotFoundError(_)) => false,
+            Err(_) => false,
+        }
+    }
+
+    /// Checks if this repository exists and is writable on the Hugging Face Hub.
+    pub async fn is_writable(&self) -> bool {
+        if !self.exists().await {
+            return false;
+        }
+        let mut headers = HeaderMap::new();
+        headers.insert("Content-Type", "application/x-ndjson".parse().unwrap());
+
+        let url = format!(
+            "{}/api/{}s/{}/commit/{}",
+            self.api.endpoint,
+            self.repo.repo_type.to_string(),
+            self.repo.url(),
+            self.repo.revision
+        );
+
+        let res: Result<StatusCode, ApiError> = (async {
+            Ok(self
+                .api
+                .client
+                .post(&url)
+                .headers(headers)
+                .send()
+                .await
+                .map_err(ApiError::from)?
+                .status())
+        })
+        .await;
+        if let Ok(status) = res {
+            if status == StatusCode::FORBIDDEN {
+                return false;
+            }
+        }
+        true
+    }
 }
 
 impl Api {
@@ -54,23 +101,6 @@ impl Api {
     ///     revision (`str`, *optional*):
     ///         The revision of the model repository from which to get the
     ///         information.
-    ///     timeout (`float`, *optional*):
-    ///         Whether to set a timeout for the request to the Hub.
-    ///     securityStatus (`bool`, *optional*):
-    ///         Whether to retrieve the security status from the model
-    ///         repository as well.
-    ///     files_metadata (`bool`, *optional*):
-    ///         Whether or not to retrieve metadata for files in the repository
-    ///         (size, LFS metadata, etc). Defaults to `False`.
-    ///     expand (`List[ExpandModelProperty_T]`, *optional*):
-    ///         List properties to return in the response. When used, only the properties in the list will be returned.
-    ///         This parameter cannot be used if `securityStatus` or `files_metadata` are passed.
-    ///         Possible values are `"author"`, `"baseModels"`, `"cardData"`, `"childrenModelCount"`, `"config"`, `"createdAt"`, `"disabled"`, `"downloads"`, `"downloadsAllTime"`, `"gated"`, `"gguf"`, `"inference"`, `"lastModified"`, `"library_name"`, `"likes"`, `"mask_token"`, `"model-index"`, `"pipeline_tag"`, `"private"`, `"safetensors"`, `"sha"`, `"siblings"`, `"spaces"`, `"tags"`, `"transformersInfo"`, `"trendingScore"` and `"widgetData"`.
-    ///     token (Union[bool, str, None], optional):
-    ///         A valid user access token (string). Defaults to the locally saved
-    ///         token, which is the recommended method for authentication (see
-    ///         https://huggingface.co/docs/huggingface_hub/quick-start#authentication).
-    ///         To disable authentication, pass `False`.
     async fn model_info(
         &self,
         repo_id: &str,
@@ -88,16 +118,21 @@ impl Api {
 
         // TODO add params for security status, blobs, expand, etc.
 
-       // let res = self.client.get(url.clone()).send().await?.maybe_err().await.unwrap();
-       // println!("api return {:?}", res.text().await);
-
-        let res = self.client.get(url).send().await?.maybe_err().await.unwrap();        
-        let model_info:ModelInfo = res.json().await?;
+        let model_info: ModelInfo = self
+            .client
+            .get(url)
+            .send()
+            .await?
+            .maybe_hf_err()
+            .await?
+            .json()
+            .await?;
 
         Ok(model_info)
     }
 }
 
+use http::{HeaderMap, StatusCode};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
