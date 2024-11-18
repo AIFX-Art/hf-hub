@@ -26,7 +26,7 @@ mod download;
 pub mod repo_info;
 pub use repo_info::ModelInfo;
 mod upload;
-pub use upload::UploadSource;
+pub use upload::{CommitError, UploadSource};
 
 /// Current version (used in user-agent)
 const VERSION: &str = env!("CARGO_PKG_VERSION");
