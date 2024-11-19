@@ -9,6 +9,7 @@ use reqwest::{
     redirect::Policy,
     Client, Error as ReqwestError,
 };
+use serde::{Deserialize, Serialize};
 use std::{fmt::Display, num::ParseIntError};
 use std::{
     future::Future,
@@ -290,7 +291,7 @@ impl ApiBuilder {
 }
 
 /// Metadata for the file
-#[derive(Debug)]
+#[derive(Serialize, Deserialize,Debug)]
 pub struct Metadata {
     commit_hash: String,
     etag: String,
