@@ -293,9 +293,12 @@ impl ApiBuilder {
 /// Metadata for the file
 #[derive(Serialize, Deserialize,Debug)]
 pub struct Metadata {
-    commit_hash: String,
-    etag: String,
-    size: usize,
+    /// commit hash of the file
+    pub commit_hash: String,
+    /// etag of the file
+    pub etag: String,
+    /// size of the file
+    pub size: usize,
 }
 
 /// The actual Api used to interact with the hub.
