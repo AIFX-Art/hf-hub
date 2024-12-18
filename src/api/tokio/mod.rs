@@ -22,7 +22,7 @@ mod download;
 
 /// repo info
 pub mod repo_info;
-pub use repo_info::*;
+pub use repo_info::ModelInfo;
 mod upload;
 pub use upload::UploadSource;
 
