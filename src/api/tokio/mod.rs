@@ -1,4 +1,4 @@
-pub use super::RepoInfo;
+use super::RepoInfo;
 use crate::{Cache, Repo, RepoType};
 use rand::Rng;
 use reqwest::{
@@ -20,6 +20,7 @@ use tokio::sync::{AcquireError, TryAcquireError};
 
 mod download;
 mod repo_info;
+pub use repo_info::RepoInfo::Model;
 mod upload;
 pub use upload::UploadSource;
 

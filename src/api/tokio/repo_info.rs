@@ -4,6 +4,7 @@ use super::{Api, ApiError, ApiRepo, ReqwestBadResponse};
 
 #[derive(Debug)]
 pub enum RepoInfo {
+    /// Model Variant
     Model(ModelInfo),
     // TODO add dataset and space info
 }
