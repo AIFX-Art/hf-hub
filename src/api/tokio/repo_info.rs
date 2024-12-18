@@ -2,7 +2,7 @@ use crate::RepoType;
 
 use super::{Api, ApiError, ApiRepo, ReqwestBadResponse};
 
-/// todo
+/// todo docs
 #[derive(Debug)]
 pub enum RepoInfo {
     /// Model Variant
@@ -11,7 +11,7 @@ pub enum RepoInfo {
 }
 
 impl RepoInfo {
-    /// todo
+    /// todo docs
     pub fn sha(&self) -> Option<&str> {
         match self {
             RepoInfo::Model(m) => m.sha.as_deref(),
@@ -104,138 +104,138 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
-/// todo
+/// todo docs
 pub struct ModelInfo {
-    /// todo
+    /// todo docs
     #[serde(default)]    
     pub _id: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "modelId")]    
     pub model_id: Option<String>,
 
-    /// todo
+    /// todo docs
     pub id: String,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub author: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub sha: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "createdAt", alias = "created_at")]
     pub created_at: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "lastModified", alias = "last_modified")]
     pub last_modified: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub private: Option<bool>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub disabled: Option<bool>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub downloads: Option<i32>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "downloadsAllTime")]
     pub downloads_all_time: Option<i32>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub gated: Option<GatedStatus>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub gguf: Option<HashMap<String, serde_json::Value>>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub inference: Option<InferenceStatus>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub likes: Option<i32>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub library_name: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub tags: Option<Vec<String>>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub pipeline_tag: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub mask_token: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "cardData", alias = "card_data")]
     pub card_data: Option<ModelCardData>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "widgetData")]
     pub widget_data: Option<serde_json::Value>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "model-index", alias = "model_index")]
     pub model_index: Option<HashMap<String, serde_json::Value>>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub config: Option<HashMap<String, serde_json::Value>>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "transformersInfo", alias = "transformers_info")]
     pub transformers_info: Option<TransformersInfo>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     #[serde(alias = "trendingScore")]
     pub trending_score: Option<i32>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub siblings: Option<Vec<RepoSibling>>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub spaces: Option<Vec<String>>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub safetensors: Option<SafeTensorsInfo>,
 }
 
-/// todo
+/// todo docs
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum GatedStatus {
-    /// todo
+    /// todo docs
     Auto,
-    /// todo
+    /// todo docs
     Manual,
-    /// todo
+    /// todo docs
     False,
 }
 
@@ -280,68 +280,68 @@ impl<'de> Deserialize<'de> for GatedStatus {
     }
 }
 
-/// todo
+/// todo docs
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum InferenceStatus {
-    /// todo
+    /// todo docs
     Warm,
-    /// todo
+    /// todo docs
     Cold,
-    /// todo
+    /// todo docs
     Frozen,
 }
 
-/// todo
+/// todo docs
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RepoSibling {
-    /// todo
+    /// todo docs
     pub rfilename: String,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub size: Option<i64>,
 
-    /// todo
+    /// todo docs
     #[serde(alias = "blobId")]
     #[serde(default)]
     pub blob_id: Option<String>,
 
-    /// todo
+    /// todo docs
     #[serde(default)]
     pub lfs: Option<BlobLfsInfo>,
 }
 
-/// todo
+/// todo docs
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BlobLfsInfo {
-    /// todo
+    /// todo docs
     pub size: i64,
-    /// todo
+    /// todo docs
     pub sha256: String,
 
-    /// todo
+    /// todo docs
     #[serde(alias = "pointerSize")]
     pub pointer_size: i64,
 }
 
-/// todo
+/// todo docs
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SafeTensorsInfo {
-    /// todo
+    /// todo docs
     pub parameters: i64,
-    /// todo
+    /// todo docs
     pub total: i64,
 }
 
-/// todo
+/// todo docs
 // Note: You'll need to implement ModelCardData and TransformersInfo structs separately
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ModelCardData {
     // Add fields as needed
 }
 
-/// todo
+/// todo docs
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TransformersInfo {
     // Add fields as needed
