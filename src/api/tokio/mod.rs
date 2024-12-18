@@ -1,4 +1,4 @@
-use super::RepoInfo;
+pub use super::RepoInfo;
 use crate::{Cache, Repo, RepoType};
 use rand::Rng;
 use reqwest::{
