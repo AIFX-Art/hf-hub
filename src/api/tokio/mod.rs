@@ -19,8 +19,9 @@ use thiserror::Error;
 use tokio::sync::{AcquireError, TryAcquireError};
 
 mod download;
-mod repo_info;
-pub use repo_info::RepoInfo::Model;
+
+/// repo info
+pub mod repo_info;
 mod upload;
 pub use upload::UploadSource;
 
