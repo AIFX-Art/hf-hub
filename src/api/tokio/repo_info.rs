@@ -28,8 +28,8 @@ impl From<ModelInfo> for RepoInfo {
 impl ApiRepo {
     /// Get the info object for a given repo.
     pub async fn repo_info(&self) -> Result<RepoInfo, ApiError> {
-        println!("Repo info {:?}",self.repo);
-                
+        println!("Repo info {:?}", self.repo);
+
         match self.repo.repo_type {
             RepoType::Model => Ok(self
                 .api
@@ -88,15 +88,11 @@ impl Api {
 
         // TODO add params for security status, blobs, expand, etc.
 
-        let model_info: ModelInfo = self
-            .client
-            .get(url)
-            .send()
-            .await?
-            .maybe_err()
-            .await?
-            .json()
-            .await?;
+        let res = self.client.get(url.clone()).send().await?.maybe_err().await.unwrap();
+        println!("api return {:?}", res.text().await);
+
+        let res = self.client.get(url).send().await?.maybe_err().await.unwrap();
+        let model_info:ModelInfo = res.json().await?;
 
         Ok(model_info)
     }
@@ -109,12 +105,12 @@ use std::collections::HashMap;
 /// todo docs
 pub struct ModelInfo {
     /// todo docs
-    #[serde(default)]    
+    #[serde(default)]
     pub _id: Option<String>,
 
     /// todo docs
     #[serde(default)]
-    #[serde(alias = "modelId")]    
+    #[serde(alias = "modelId")]
     pub model_id: Option<String>,
 
     /// todo docs
@@ -331,7 +327,7 @@ pub struct BlobLfsInfo {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SafeTensorsInfo {
     /// todo docs
-    pub parameters: i64,
+    pub parameters: Option<HashMap<String, serde_json::Value>>,
     /// todo docs
     pub total: i64,
 }
