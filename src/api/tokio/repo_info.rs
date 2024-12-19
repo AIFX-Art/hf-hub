@@ -28,6 +28,8 @@ impl From<ModelInfo> for RepoInfo {
 impl ApiRepo {
     /// Get the info object for a given repo.
     pub async fn repo_info(&self) -> Result<RepoInfo, ApiError> {
+        println!("Repo info {:?}",self.repo);
+                
         match self.repo.repo_type {
             RepoType::Model => Ok(self
                 .api
