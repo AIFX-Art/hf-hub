@@ -28,7 +28,7 @@ impl From<ModelInfo> for RepoInfo {
 impl ApiRepo {
     /// Get the info object for a given repo.
     pub async fn repo_info(&self) -> Result<RepoInfo, ApiError> {
-        println!("Repo info {:?}", self.repo);
+        //println!("Repo info {:?}", self.repo);
 
         match self.repo.repo_type {
             RepoType::Model => Ok(self
@@ -88,10 +88,10 @@ impl Api {
 
         // TODO add params for security status, blobs, expand, etc.
 
-        let res = self.client.get(url.clone()).send().await?.maybe_err().await.unwrap();
-        println!("api return {:?}", res.text().await);
+       // let res = self.client.get(url.clone()).send().await?.maybe_err().await.unwrap();
+       // println!("api return {:?}", res.text().await);
 
-        let res = self.client.get(url).send().await?.maybe_err().await.unwrap();
+        let res = self.client.get(url).send().await?.maybe_err().await.unwrap();        
         let model_info:ModelInfo = res.json().await?;
 
         Ok(model_info)
